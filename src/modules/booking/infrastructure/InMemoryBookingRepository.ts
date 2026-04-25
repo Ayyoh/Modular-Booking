@@ -11,4 +11,10 @@ export class InMemoryBookingRepository implements BookingRepository {
   async save(booking: Booking): Promise<void> {
     this.bookings.push(booking);
   }
+
+  async findById(id: number) {
+  return this.bookings.find(
+    (b) => b.id === id
+  );
+}
 }

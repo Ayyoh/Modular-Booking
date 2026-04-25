@@ -1,17 +1,36 @@
-import { useLoaderData } from "@tanstack/react-router";
+import { cancelBookingUseCase } from "../application/use-cases";
+
+import { useLoaderData, useRouter } from "@tanstack/react-router";
+
+import { CreateBookingForm } from "./CreateBookingForm";
+import { bookingRoute } from "../routes";
 
 export function BookingPage() {
+  const router = useRouter();
+
   const bookings = useLoaderData({
-    from: "/booking",
+    from: bookingRoute.id
   });
+
+  async function handleCancel(id: number) {
+    await cancelBookingUseCase.execute(id);
+
+    await router.invalidate();
+  }
 
   return (
     <div>
       <h1>Bookings</h1>
 
-      {bookings.map((booking: any) => (
+      <CreateBookingForm />
+
+      {bookings?.map((booking: any) => (
         <div key={booking.id}>
-          {booking.location}
+          <p>{booking.location}</p>
+
+          <p>{booking.status}</p>
+
+          <button onClick={() => handleCancel(booking.id)}>Cancel</button>
         </div>
       ))}
     </div>

@@ -1,13 +1,5 @@
-export async function loadBookings() {
-  return [
-    {
-      id: 1,
-      location: "Davao",
-    },
+import { bookingRepository } from "../infrastructure/repository-instance";
 
-    {
-      id: 2,
-      location: "Manila",
-    },
-  ];
+export async function loadBookings() {
+  return bookingRepository.getAll();
 }

@@ -1,19 +1,27 @@
 import { useState } from "react";
 
+import { createBookingUseCase } from "../application/use-cases";
+import { useRouter } from "@tanstack/react-router";
+
 export function CreateBookingForm() {
+  const router = useRouter();
+
   const [location, setLocation] = useState("");
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    console.log(location);
-  }
+    await createBookingUseCase.execute(location);
 
+    await router.invalidate();
+
+    setLocation("");
+  }
   return (
     <form onSubmit={handleSubmit}>
       <input value={location} onChange={(e) => setLocation(e.target.value)} />
 
-      <button type="submit">Create</button>
+      <button type="submit">Create Booking</button>
     </form>
   );
 }
