@@ -5,7 +5,7 @@ import { loadBookings } from "./services/load-booking";
 
 export const bookingRoute = createRoute({
   getParentRoute: () => authRoute,
-  path: "/booking",
+  path: "booking",
 
   loader: async () => {
     return loadBookings();

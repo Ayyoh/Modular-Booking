@@ -1,4 +1,4 @@
-import { createRoute, redirect } from "@tanstack/react-router";
+import { Outlet, createRoute, redirect } from "@tanstack/react-router";
 import { navItems } from "../kernel/nav";
 import { useAuthStore } from "../../shared/stores/auth.store";
 import { rootRoute } from "./root-route";
@@ -16,6 +16,7 @@ export const authRoute = createRoute({
       });
     }
   },
+  component: Outlet,
 });
 
 export const loginRoute = createRoute({
