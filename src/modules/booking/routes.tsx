@@ -1,9 +1,9 @@
 import { createRoute } from "@tanstack/react-router";
-import { rootRoute } from "../../app/router/root-route";
+import { authRoute } from "../../app/router/auth-route";
 import BookingPage from "./presentation/BookingPage";
 
 export const bookingRoute = createRoute({
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => authRoute,
   path: "/booking",
 
   loader: async () => {

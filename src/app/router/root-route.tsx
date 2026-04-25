@@ -1,7 +1,7 @@
 import { Outlet, createRootRoute } from "@tanstack/react-router";
 // import { Sidebar } from "../../shared/components/Sidebar";
 
-function RootLayout() {
+export function RootLayout() {
   return (
     <div className="flex">
       {/* <Sidebar /> */}
