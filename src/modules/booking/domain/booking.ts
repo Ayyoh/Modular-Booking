@@ -23,4 +23,10 @@ export class Booking {
 
     this.status = "cancelled";
   }
+
+  ifFieldsAreValid() {
+    if (!this.location || !this.name) {
+      throw new Error("Location and name are required");
+    }
+  }
 }

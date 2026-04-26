@@ -11,6 +11,8 @@ export class CreateBooking {
   async execute(location: string, name: string) {
     const booking = new Booking(Date.now(), location, name, "active");
 
+    booking.ifFieldsAreValid();
+
     await this.repository.save(booking);
 
     return booking;

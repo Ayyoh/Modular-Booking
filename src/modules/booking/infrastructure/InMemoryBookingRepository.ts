@@ -13,8 +13,6 @@ export class InMemoryBookingRepository implements BookingRepository {
   }
 
   async findById(id: number) {
-  return this.bookings.find(
-    (b) => b.id === id
-  );
-}
+    return this.bookings.find((b) => b.id === id);
+  }
 }
