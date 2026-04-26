@@ -1,5 +1,7 @@
 import { bookingRepository } from "../infrastructure/repository-instance";
 
-export async function loadBookings() {
+export const bookingsQueryKey = ["bookings"] as const;
+
+export async function getBookings() {
   return bookingRepository.getAll();
 }

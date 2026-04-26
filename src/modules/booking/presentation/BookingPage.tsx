@@ -1,21 +1,23 @@
 import { cancelBookingUseCase } from "../application/use-cases";
 
-import { useLoaderData, useRouter } from "@tanstack/react-router";
-
 import { CreateBookingForm } from "./CreateBookingForm";
-import { bookingRoute } from "../routes";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { bookingsQueryKey, getBookings } from "../services/booking-queries";
 
 export function BookingPage() {
-  const router = useRouter();
+  const { data: bookings = [] } = useQuery({
+    queryKey: bookingsQueryKey,
+    queryFn: getBookings,
+  });
 
-  const bookings = useLoaderData({
-    from: bookingRoute.id,
+  const cancelMutation = useMutation({
+    mutationFn: async (id: number) => {
+      return await cancelBookingUseCase.execute(id);
+    },
   });
 
   async function handleCancel(id: number) {
-    await cancelBookingUseCase.execute(id);
-
-    await router.invalidate();
+    await cancelMutation.mutateAsync(id);
   }
 
   return (
@@ -24,7 +26,7 @@ export function BookingPage() {
 
       <CreateBookingForm />
 
-      {bookings?.map((booking: any) => (
+      {bookings.map((booking) => (
         <div
           className="flex flex-col gap-2 border rounded-md p-4 w-full mt-5 bg-accent"
           key={booking.id}

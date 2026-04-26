@@ -1,24 +1,33 @@
 import { useState } from "react";
+import { useMutation } from "@tanstack/react-query";
 
 import { createBookingUseCase } from "../application/use-cases";
-import { useRouter } from "@tanstack/react-router";
-import { Input } from "../../../components/ui/input";
+
 import { Button } from "../../../components/ui/button";
+import { Input } from "../../../components/ui/input";
+
+type CreateBookingVariables = {
+  location: string;
+  name: string;
+};
 
 export function CreateBookingForm() {
-  const router = useRouter();
-
   const [location, setLocation] = useState("");
   const [name, setName] = useState("");
+
+  const mutation = useMutation({
+    mutationFn: async ({ location, name }: CreateBookingVariables) => {
+      return await createBookingUseCase.execute(location, name);
+    },
+  });
 
   async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    await createBookingUseCase.execute(location, name);
-
-    await router.invalidate();
+    await mutation.mutateAsync({ location, name });
 
     setLocation("");
+    setName("");
   }
   return (
     <form onSubmit={handleSubmit}>
