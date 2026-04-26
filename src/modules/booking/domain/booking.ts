@@ -1,10 +1,19 @@
 export class Booking {
   public readonly id: number;
   public readonly location: string;
+  public readonly name: string;
   public status: "active" | "cancelled";
 
-  constructor(id: number, location: string, status: "active" | "cancelled") {
-    ((this.id = id), (this.location = location), (this.status = status));
+  constructor(
+    id: number,
+    location: string,
+    name: string,
+    status: "active" | "cancelled",
+  ) {
+    ((this.id = id),
+      (this.location = location),
+      (this.status = status),
+      (this.name = name));
   }
 
   cancel() {

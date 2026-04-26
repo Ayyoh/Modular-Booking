@@ -8,8 +8,8 @@ export class CreateBooking {
     this.repository = repository;
   }
 
-  async execute(location: string) {
-    const booking = new Booking(Date.now(), location, "active");
+  async execute(location: string, name: string) {
+    const booking = new Booking(Date.now(), location, name, "active");
 
     await this.repository.save(booking);
 
