@@ -1,40 +1,38 @@
-import { createRoute, createRouter, redirect } from "@tanstack/react-router";
-import { enabledModules, navItems } from "../kernel/nav";
-import { useAuthStore } from "../../shared/stores/auth.store";
+import {
+  type AnyRoute,
+  createRoute,
+  createRouter,
+} from "@tanstack/react-router";
+
+import { DashboardPage } from "../../modules/appshell/dashboard";
+import { enabledModules } from "../kernel/nav";
 import { authRoute, loginRoute } from "./auth-route";
 import { rootRoute } from "./root-route";
 
-const moduleRoutes = enabledModules.flatMap((module) => module.routes);
 
-const indexRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: "/",
-  beforeLoad: () => {
-    const user = useAuthStore.getState().user;
-    const firstPath = navItems[0]?.path;
+// DASHBOARD
+export const dashboardRoute = createRoute({
+  getParentRoute: () => authRoute,
 
-    if (!firstPath) {
-      return;
-    }
+  path: "dashboard",
 
-    if (user) {
-      throw redirect({ to: firstPath });
-    }
-
-    throw redirect({ to: "/login" });
-  },
-  component: () => <div>No modules are enabled.</div>,
+  component: DashboardPage,
 });
 
-const protectedRoutes = authRoute.addChildren(moduleRoutes);
-const routeTree = rootRoute.addChildren([indexRoute, loginRoute, protectedRoutes]);
+const moduleRoutes = enabledModules.flatMap(
+  (module) => module.routes
+) as AnyRoute[];
+
+const protectedRoutes = authRoute.addChildren([
+  dashboardRoute,
+  ...moduleRoutes,
+] as AnyRoute[]);
+
+const routeTree = rootRoute.addChildren([
+  loginRoute,
+  protectedRoutes,
+] as AnyRoute[]);
 
 export const router = createRouter({
   routeTree,
 });
-
-declare module "@tanstack/react-router" {
-  interface Register {
-    router: typeof router;
-  }
-}

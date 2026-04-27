@@ -3,11 +3,9 @@ import { Outlet, createRootRoute } from "@tanstack/react-router";
 
 export function RootLayout() {
   return (
-    <div className="flex">
+    <div className="p-5 flex w-full h-full">
       {/* <Sidebar /> */}
-      <main className="p-5">
-        <Outlet />
-      </main>
+      <Outlet />
     </div>
   );
 }
