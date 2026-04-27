@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { createBookingUseCase } from "../application/use-cases";
+import { bookingsQueryKey } from "../services/booking-queries";
 
 import { Button } from "../../../components/ui/button";
 import { Input } from "../../../components/ui/input";
@@ -12,12 +13,19 @@ type CreateBookingVariables = {
 };
 
 export function CreateBookingForm() {
+  const queryClient = useQueryClient();
+  
   const [location, setLocation] = useState("");
   const [name, setName] = useState("");
 
   const mutation = useMutation({
     mutationFn: async ({ location, name }: CreateBookingVariables) => {
       return await createBookingUseCase.execute(location, name);
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: bookingsQueryKey,
+      });
     },
   });
 

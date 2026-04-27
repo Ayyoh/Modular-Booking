@@ -1,10 +1,12 @@
 import { cancelBookingUseCase } from "../application/use-cases";
 
 import { CreateBookingForm } from "./CreateBookingForm";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { bookingsQueryKey, getBookings } from "../services/booking-queries";
 
 export function BookingPage() {
+  const queryClient = useQueryClient();
+
   const { data: bookings = [] } = useQuery({
     queryKey: bookingsQueryKey,
     queryFn: getBookings,
@@ -13,6 +15,11 @@ export function BookingPage() {
   const cancelMutation = useMutation({
     mutationFn: async (id: number) => {
       return await cancelBookingUseCase.execute(id);
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: bookingsQueryKey,
+      });
     },
   });
 
