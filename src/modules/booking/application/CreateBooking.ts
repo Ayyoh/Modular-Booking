@@ -1,3 +1,4 @@
+import { useAuthStore } from "../../../shared/stores/auth.store";
 import { Booking } from "../domain/booking";
 import type { BookingRepository } from "./ports/BookingRepository";
 
@@ -9,7 +10,12 @@ export class CreateBooking {
   }
 
   async execute(location: string, name: string) {
-    const booking = new Booking(Date.now(), location, name, "active");
+    const userRole = useAuthStore.getState().user?.role;
+    if (!userRole) {
+      throw new Error("Unauthorized");
+    }
+
+    const booking = new Booking(Date.now(), location, name, "driver", "active");
 
     booking.ifFieldsAreValid();
 
