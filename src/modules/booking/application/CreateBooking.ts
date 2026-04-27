@@ -11,11 +11,12 @@ export class CreateBooking {
 
   async execute(location: string, name: string) {
     const userRole = useAuthStore.getState().user?.role;
+
     if (!userRole) {
       throw new Error("Unauthorized");
     }
 
-    const booking = new Booking(Date.now(), location, name, "driver", "active");
+    const booking = new Booking(Date.now(), location, name, userRole, "active");
 
     booking.ifFieldsAreValid();
 

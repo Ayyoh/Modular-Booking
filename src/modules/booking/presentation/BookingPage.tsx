@@ -1,4 +1,5 @@
 import { cancelBookingUseCase } from "../application/use-cases";
+import type { Booking } from "../domain/booking";
 
 import { CreateBookingForm } from "./CreateBookingForm";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -33,7 +34,7 @@ export function BookingPage() {
 
       <CreateBookingForm />
 
-      {bookings.map((booking) => (
+      {bookings.map((booking: Booking) => (
         <div
           className="flex flex-col gap-2 border rounded-md p-4 w-full mt-5 bg-accent"
           key={booking.id}
