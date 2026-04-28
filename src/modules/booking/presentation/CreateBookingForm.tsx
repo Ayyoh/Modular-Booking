@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { createBookingUseCase } from "../application/use-cases";
@@ -6,6 +6,7 @@ import { bookingsQueryKey } from "../services/booking-queries";
 
 import { Button } from "../../../components/ui/button";
 import { Input } from "../../../components/ui/input";
+import { useLocationStore } from "../../../shared/stores/location.store";
 
 type CreateBookingVariables = {
   location: string;
@@ -14,8 +15,10 @@ type CreateBookingVariables = {
 
 export function CreateBookingForm() {
   const queryClient = useQueryClient();
-  
-  const [location, setLocation] = useState("");
+
+  const selectedLocation = useLocationStore((loc) => loc.selectedLocation);
+
+  const [location, setLocation] = useState(selectedLocation);
   const [name, setName] = useState("");
 
   const mutation = useMutation({
@@ -37,6 +40,11 @@ export function CreateBookingForm() {
     setLocation("");
     setName("");
   }
+
+  useEffect(() => {
+    setLocation(selectedLocation);
+  }, [selectedLocation]);
+
   return (
     <form onSubmit={handleSubmit}>
       <div className="flex flex-col gap-2">

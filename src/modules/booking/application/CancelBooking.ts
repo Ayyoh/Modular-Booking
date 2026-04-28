@@ -15,5 +15,7 @@ export class CancelBooking {
     }
 
     booking.cancel();
+
+    await this.repository.save(booking);
   }
 }
