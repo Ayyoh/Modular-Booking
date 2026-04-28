@@ -9,6 +9,13 @@ export class InMemoryBookingRepository implements BookingRepository {
   }
 
   async save(booking: Booking): Promise<void> {
+    const index = this.bookings.findIndex((existing) => existing.id === booking.id);
+
+    if (index >= 0) {
+      this.bookings[index] = booking;
+      return;
+    }
+
     this.bookings.push(booking);
   }
 

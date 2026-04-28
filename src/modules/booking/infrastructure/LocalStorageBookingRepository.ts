@@ -1,30 +1,47 @@
 import type { BookingRepository } from "../application/ports/BookingRepository";
-import type { Booking } from "../domain/booking";
+import { Booking } from "../domain/booking";
 
 export class LocalStorageBookingRepository implements BookingRepository {
   private key = "bookings";
 
-  async getAll() {
+  private hydrateBooking(booking: Booking) {
+    return new Booking(
+      booking.id,
+      booking.location,
+      booking.name,
+      booking.ownerRole,
+      booking.status,
+    );
+  }
+
+  async getAll(): Promise<Booking[]> {
     const raw = localStorage.getItem(this.key);
 
     if (!raw) {
       return [];
     }
 
-    return JSON.parse(raw);
+    const bookings = JSON.parse(raw) as Booking[];
+
+    return bookings.map((booking) => this.hydrateBooking(booking));
   }
 
-  async save(booking: Booking) {
+  async save(booking: Booking): Promise<void> {
     const bookings = await this.getAll();
+    const index = bookings.findIndex((existing) => existing.id === booking.id);
 
-    bookings.push(booking);
+    if (index >= 0) {
+      bookings[index] = booking;
+    } else {
+      bookings.push(booking);
+    }
 
     localStorage.setItem(this.key, JSON.stringify(bookings));
   }
 
-  async findById(id: number) {
+  async findById(id: number): Promise<Booking | undefined> {
     const bookings = await this.getAll();
 
-    return bookings.find((b: Booking) => b.id === id);
+    return bookings.find((b) => b.id === id);
   }
 }
